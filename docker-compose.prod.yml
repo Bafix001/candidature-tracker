@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16
+    container_name: jobtracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jobtracker
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - jobtracker-db-data:/var/lib/postgresql/data
+    networks:
+      - db_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d jobtracker"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  jobtracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jobtracker-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/jobtracker
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    networks:
+      - db_net
+      - caddy_net
+
+networks:
+  db_net:
+  caddy_net:
+    external: true
+    name: n8n_caddy_net
+
+volumes:
+  jobtracker-db-data:
