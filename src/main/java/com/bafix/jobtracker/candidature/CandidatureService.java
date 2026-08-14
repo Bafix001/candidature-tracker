@@ -19,7 +19,7 @@ public class CandidatureService {
 
     public Candidature findById(Long id) {
         return candidatureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Candidature introuvable avec l'id " + id));
+                .orElseThrow(() -> new CandidatureNotFoundException(id));
     }
 
     public Candidature create(Candidature candidature) {
