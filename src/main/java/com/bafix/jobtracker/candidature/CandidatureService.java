@@ -1,5 +1,6 @@
 package com.bafix.jobtracker.candidature;
 
+import com.bafix.jobtracker.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,21 +14,22 @@ public class CandidatureService {
         this.candidatureRepository = candidatureRepository;
     }
 
-    public List<Candidature> findAll() {
-        return candidatureRepository.findAll();
+    public List<Candidature> findAllForUser(User user) {
+        return candidatureRepository.findByUser(user);
     }
 
-    public Candidature findById(Long id) {
-        return candidatureRepository.findById(id)
+    public Candidature findByIdForUser(Long id, User user) {
+        return candidatureRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new CandidatureNotFoundException(id));
     }
 
-    public Candidature create(Candidature candidature) {
+    public Candidature create(Candidature candidature, User user) {
+        candidature.setUser(user);
         return candidatureRepository.save(candidature);
     }
 
-    public Candidature update(Long id, Candidature candidatureMaj) {
-        Candidature existante = findById(id);
+    public Candidature update(Long id, Candidature candidatureMaj, User user) {
+        Candidature existante = findByIdForUser(id, user);
         existante.setEntreprise(candidatureMaj.getEntreprise());
         existante.setPoste(candidatureMaj.getPoste());
         existante.setStatut(candidatureMaj.getStatut());
@@ -37,8 +39,8 @@ public class CandidatureService {
         return candidatureRepository.save(existante);
     }
 
-    public void delete(Long id) {
-        Candidature existante = findById(id);
+    public void delete(Long id, User user) {
+        Candidature existante = findByIdForUser(id, user);
         candidatureRepository.delete(existante);
     }
 }
