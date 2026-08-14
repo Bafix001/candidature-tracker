@@ -3,8 +3,8 @@ spring:
     name: jobtracker
   datasource:
     url: jdbc:postgresql://localhost:5432/jobtracker
-    username: jobtracker
-    password: jobtracker
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -19,5 +19,5 @@ server:
     context-path: /api
 
 jwt:
-  secret: "CBt1TJpjNvd3xAyxcXtfT9PH0kXHDgJnNfEvjVJJ8onNBraaypKn8GVk3hSF05VrmbQoQroK/rWasR7oQNM0UQ=="
+  secret: ${JWT_SECRET}
   expiration: 86400000
