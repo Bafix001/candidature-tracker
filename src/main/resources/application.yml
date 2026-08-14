@@ -2,7 +2,7 @@ spring:
   application:
     name: jobtracker
   datasource:
-    url: jdbc:postgresql://localhost:5432/jobtracker
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/jobtracker}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
